@@ -9,7 +9,7 @@ except ImportError as e:
     e.msg += "\n    hint ---> `conda install conda-build`"
     raise
 
-def setup_dev_environment(ask=False):
+def setup_dev_env(ask=False):
     # grab metadata (we assume a simple setup with one build variant)
     metadata = api.render(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'conda-recipe'))[0][0]
 
@@ -31,10 +31,12 @@ def setup_dev_environment(ask=False):
             except KeyboardInterrupt:
                 print('')
                 return 'n'
-        answer = ask()
+            except NameError:
+                return input(prompt).lower() or 'y'
+        answer = question()
         while not answer.startswith(('y','n')):
             print("{} is not valid, please answer 'yes' or 'no'")
-            answer = ask()
+            answer = question()
         if answer.startswith('n'):
             return
     create_env(
